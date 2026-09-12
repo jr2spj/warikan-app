@@ -99,6 +99,21 @@ textarea {
   animation: fade-in 0.4s ease-out both;
 }
 
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-sheet {
+  animation: sheet-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .sync-dot {
   animation: pulse-soft 1.6s ease-in-out infinite;
 }

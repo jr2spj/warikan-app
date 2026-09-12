@@ -47,6 +47,8 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 | 立替 | 支払者・名目・金額・負担対象を記録 |
 | 精算 | 傾斜按分 + 端数切り上げ + 最小送金 |
 | 共有 | 精算テキスト / URL をクリップボードへ |
+| 保持期限 | 最終更新から90日経過で自動削除 |
+| 注意事項 | 初回同意 + フッターから計算方法・注意を表示 |
 
 ## 精算ロジック
 
@@ -58,6 +60,15 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 ネット残高（支払額 − 負担額）から債権者・債務者を貪欲マッチングし、送金回数を最小化します。
 
+## 90日自動削除
+
+- 判定: `rooms.updated_at` が現在より90日以上前
+- 実行: Vercel Cron → `GET /api/cron/cleanup-rooms`（毎日 15:00 UTC）
+- 保護: `Authorization: Bearer $CRON_SECRET`
+
+Vercel の環境変数に `CRON_SECRET`（長いランダム文字列）を追加してください。  
+既存 Supabase には `supabase/migration-retention.sql` も実行してください（delete ポリシー）。
+
 ## ディレクトリ構成
 
 ```
@@ -65,8 +76,9 @@ src/
   app/                 # ページ・API Route
   components/home/     # トップ画面
   components/room/     # ルーム画面（単一 URL）
+  components/legal/    # 初回同意・注意事項・計算説明
   hooks/               # ポーリング同期
-  lib/                 # 型・精算・ストレージ
+  lib/                 # 型・精算・ストレージ・利用文面
   store/               # Zustand
 supabase/schema.sql    # DB スキーマ
 ```
@@ -74,5 +86,6 @@ supabase/schema.sql    # DB スキーマ
 ## Vercel デプロイ
 
 1. このリポジトリを Vercel に Import
-2. 環境変数に Supabase の値を設定
+2. 環境変数に Supabase の値と `CRON_SECRET` を設定
 3. Deploy
+4. （既存DBの場合）`supabase/migration-retention.sql` を実行

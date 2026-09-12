@@ -21,6 +21,7 @@ alter table public.rooms enable row level security;
 drop policy if exists "Allow public read rooms" on public.rooms;
 drop policy if exists "Allow public insert rooms" on public.rooms;
 drop policy if exists "Allow public update rooms" on public.rooms;
+drop policy if exists "Allow public delete rooms" on public.rooms;
 
 create policy "Allow public read rooms"
   on public.rooms for select
@@ -35,7 +36,14 @@ create policy "Allow public update rooms"
   using (true)
   with check (true);
 
+create policy "Allow public delete rooms"
+  on public.rooms for delete
+  using (true);
+
 -- Realtime（任意）
 -- Dashboard > Database > Replication で rooms を有効化してください。
 -- 既に追加済みの場合はエラーになるので、そのときはスキップで構いません。
 -- alter publication supabase_realtime add table public.rooms;
+
+-- 最終更新から90日超のルーム削除（手動確認用）
+-- delete from public.rooms where updated_at < now() - interval '90 days';

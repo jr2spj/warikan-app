@@ -4,6 +4,7 @@ export interface RoomStore {
   getRoom(id: string): Promise<Room | null>;
   createRoom(room: Room): Promise<Room>;
   updateRoom(id: string, room: Room): Promise<Room>;
+  deleteExpiredRooms(olderThanIso: string): Promise<number>;
 }
 
 declare global {
@@ -28,5 +29,16 @@ export const memoryStore: RoomStore = {
   async updateRoom(id, room) {
     getMemoryMap().set(id, { ...room, id, updatedAt: new Date().toISOString() });
     return getMemoryMap().get(id)!;
+  },
+  async deleteExpiredRooms(olderThanIso) {
+    const map = getMemoryMap();
+    let deleted = 0;
+    for (const [id, room] of map) {
+      if (room.updatedAt < olderThanIso) {
+        map.delete(id);
+        deleted += 1;
+      }
+    }
+    return deleted;
   },
 };

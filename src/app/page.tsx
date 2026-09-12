@@ -1,9 +1,10 @@
 import { CreateRoomButton } from "@/components/home/CreateRoomButton";
 import { RecentRooms } from "@/components/home/RecentRooms";
+import { SiteShell } from "@/components/legal/SiteShell";
 
 export default function HomePage() {
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col px-5 pb-16 pt-10 sm:pt-16">
+    <SiteShell>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[55vh] overflow-hidden"
@@ -27,10 +28,6 @@ export default function HomePage() {
       <div className="relative z-10 mt-14">
         <RecentRooms />
       </div>
-
-      <footer className="relative z-10 mt-auto pt-16 text-xs text-[var(--ink-muted)]">
-        スマホ向け・URLキー共有型
-      </footer>
-    </main>
+    </SiteShell>
   );
 }

@@ -145,5 +145,16 @@ export function createSupabaseStore(): RoomStore | null {
       if (error) throwSupabaseError(error);
       return rowToRoom(data as RoomRow);
     },
+
+    async deleteExpiredRooms(olderThanIso) {
+      const { data, error } = await client
+        .from("rooms")
+        .delete()
+        .lt("updated_at", olderThanIso)
+        .select("id");
+
+      if (error) throwSupabaseError(error);
+      return data?.length ?? 0;
+    },
   };
 }
