@@ -28,12 +28,14 @@ http://localhost:3000 を開きます。
 3. `.env.local` に以下を設定
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_URL=https://xxxx.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
 未設定の場合はプロセス内メモリに保存します（開発用。Vercel 本番ではインスタンス間で共有されません）。
+
+> Vercel では `NEXT_PUBLIC_` 付きだと保存できないことがあります。上記の名前（プレフィックスなし）を使ってください。
 
 ## 主な機能
 

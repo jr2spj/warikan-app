@@ -45,9 +45,12 @@ function assertValidSupabaseUrl(url: string): void {
 }
 
 function getSupabaseAdmin(): SupabaseClient | null {
-  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const rawUrl =
+    process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY ??
+    process.env.SUPABASE_ANON_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!rawUrl?.trim() || !key?.trim()) return null;
   const url = normalizeSupabaseUrl(rawUrl);
@@ -68,11 +71,12 @@ function throwSupabaseError(error: { message: string }): never {
 }
 
 export function isSupabaseConfigured(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() &&
-      (process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()),
-  );
+  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ??
+    process.env.SUPABASE_ANON_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  return Boolean(url?.trim() && key?.trim());
 }
 
 function rowToRoom(row: RoomRow): Room {
