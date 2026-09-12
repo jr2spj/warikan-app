@@ -14,7 +14,7 @@ export function PaymentSection() {
   const [participantIds, setParticipantIds] = useState<string[]>([]);
   const [allSelected, setAllSelected] = useState(true);
 
-  const memberOptions = room?.members ?? [];
+  const memberOptions = useMemo(() => room?.members ?? [], [room?.members]);
 
   const effectiveParticipants = useMemo(() => {
     if (allSelected) return memberOptions.map((m) => m.id);

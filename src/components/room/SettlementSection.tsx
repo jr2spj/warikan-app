@@ -26,14 +26,21 @@ export function SettlementSection() {
 
   if (!room || !result) return null;
 
+  const currentRoom = room;
+  const currentResult = result;
+
   const nameOf = (id: string) =>
-    room.members.find((m) => m.id === id)?.name ?? "不明";
+    currentRoom.members.find((m) => m.id === id)?.name ?? "不明";
 
   async function copyText(kind: "result" | "url") {
     const text =
       kind === "url"
         ? window.location.href
-        : formatSettlementText(room.name, room.members, result!);
+        : formatSettlementText(
+            currentRoom.name,
+            currentRoom.members,
+            currentResult,
+          );
 
     try {
       await navigator.clipboard.writeText(text);
