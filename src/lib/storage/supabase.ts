@@ -12,21 +12,66 @@ interface RoomRow {
   updated_at: string;
 }
 
+/** Project URL only. Fixes common copy-paste mistakes from the Supabase dashboard. */
+function normalizeSupabaseUrl(raw: string): string {
+  let url = raw.trim().replace(/^['"]|['"]$/g, "");
+  url = url.replace(/\/+$/, "");
+  url = url.replace(/\/rest\/v1(?:\/.*)?$/i, "");
+  url = url.replace(/\/+$/, "");
+  return url;
+}
+
+function assertValidSupabaseUrl(url: string): void {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(
+      "Supabase URL が不正です。https://xxxx.supabase.co の形で設定してください（/rest/v1 は不要）",
+    );
+  }
+
+  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
+    throw new Error(
+      "Supabase URL が不正です。https://xxxx.supabase.co の形で設定してください",
+    );
+  }
+
+  if (!parsed.hostname.includes("supabase")) {
+    throw new Error(
+      "Supabase URL が不正です。Project URL（https://xxxx.supabase.co）を貼ってください",
+    );
+  }
+}
+
 function getSupabaseAdmin(): SupabaseClient | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!url || !key) return null;
-  return createClient(url, key, {
+  if (!rawUrl?.trim() || !key?.trim()) return null;
+  const url = normalizeSupabaseUrl(rawUrl);
+  assertValidSupabaseUrl(url);
+  return createClient(url, key.trim(), {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 }
 
+function throwSupabaseError(error: { message: string }): never {
+  const message = error.message;
+  if (/invalid path/i.test(message)) {
+    throw new Error(
+      "Invalid path specified in request URL（Supabase URL の設定を確認してください。正しくは https://xxxx.supabase.co のみ）",
+    );
+  }
+  throw new Error(message);
+}
+
 export function isSupabaseConfigured(): boolean {
   return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      (process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() &&
+      (process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()),
   );
 }
 
@@ -54,7 +99,7 @@ export function createSupabaseStore(): RoomStore | null {
         .eq("id", id)
         .maybeSingle();
 
-      if (error) throw new Error(error.message);
+      if (error) throwSupabaseError(error);
       if (!data) return null;
       return rowToRoom(data as RoomRow);
     },
@@ -74,7 +119,7 @@ export function createSupabaseStore(): RoomStore | null {
         .select("*")
         .single();
 
-      if (error) throw new Error(error.message);
+      if (error) throwSupabaseError(error);
       return rowToRoom(data as RoomRow);
     },
 
@@ -93,7 +138,7 @@ export function createSupabaseStore(): RoomStore | null {
         .select("*")
         .single();
 
-      if (error) throw new Error(error.message);
+      if (error) throwSupabaseError(error);
       return rowToRoom(data as RoomRow);
     },
   };
