@@ -41,7 +41,7 @@ export default function DonateCompletePage() {
   }, []);
 
   return (
-    <SiteShell>
+    <SiteShell skipConsent>
       <header className="space-y-4">
         <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--accent)]">
           Support

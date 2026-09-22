@@ -7,12 +7,18 @@ interface SiteShellProps {
   children: React.ReactNode;
   /** ルーム画面など、フッター余白を少し詰める */
   dense?: boolean;
+  /** 公開ページでは同意モーダルを出さず、クローラーが本文を読めるようにする */
+  skipConsent?: boolean;
 }
 
-export function SiteShell({ children, dense = false }: SiteShellProps) {
+export function SiteShell({
+  children,
+  dense = false,
+  skipConsent = false,
+}: SiteShellProps) {
   return (
     <>
-      <ConsentGate />
+      {skipConsent ? null : <ConsentGate />}
       <div
         className={
           dense

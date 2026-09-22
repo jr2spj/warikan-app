@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -15,6 +16,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Warikan — リアルタイム割り勘",
   description:
     "URLを共有するだけで、ログイン不要のリアルタイム割り勘。メンバー傾斜・立替・最小送金まで一気に。",
