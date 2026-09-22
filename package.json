@@ -11,11 +11,14 @@
     "check:settlement": "npx tsx scripts/settlement-check.ts"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^6.11.0",
+    "@stripe/stripe-js": "^9.17.0",
     "@supabase/supabase-js": "^2.49.1",
     "nanoid": "^5.1.5",
     "next": "^15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "stripe": "^22.6.2",
     "zustand": "^5.0.3"
   },
   "devDependencies": {

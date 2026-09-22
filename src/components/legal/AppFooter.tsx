@@ -34,11 +34,14 @@ export function AppFooter() {
           </button>
         </div>
         {DONATE_ENABLED ? (
-          <div className="mt-5">
-            <DonateButton />
-            <p className="mt-2 text-center text-[11px] leading-relaxed">
-              任意です。支援の有無で機能は変わりません。
+          <div className="mt-6 border-t border-[var(--line)] pt-5">
+            <p className="text-sm font-medium text-[var(--ink)]">開発者を支援できます</p>
+            <p className="mt-1 max-w-sm text-xs leading-relaxed">
+              いただいた支援は、サーバー代などシステムの維持管理に活用します。任意です。支援の有無で機能は変わりません。
             </p>
+            <div className="mt-3">
+              <DonateButton />
+            </div>
           </div>
         ) : null}
         <p className="mt-5 text-xs tracking-wide">Warikan · URLキー共有型</p>
