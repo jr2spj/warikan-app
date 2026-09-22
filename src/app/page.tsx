@@ -5,7 +5,7 @@ import { SiteShell } from "@/components/legal/SiteShell";
 
 export default function HomePage() {
   return (
-    <SiteShell>
+    <SiteShell skipConsent>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 h-[55vh] overflow-hidden"
