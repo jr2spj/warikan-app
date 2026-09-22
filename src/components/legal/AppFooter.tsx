@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ROOM_RETENTION_DAYS } from "@/lib/retention";
 import { DONATE_ENABLED } from "@/lib/donate";
 import { DonateButton } from "@/components/legal/DonateButton";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, OPERATOR_NAME } from "@/lib/site";
 
 export function AppFooter() {
   return (
@@ -56,7 +56,24 @@ export function AppFooter() {
           </div>
         </div>
       ) : null}
-      <p className="mt-5 text-xs tracking-wide">Warikan · URLキー共有型</p>
+      {OPERATOR_NAME || CONTACT_EMAIL ? (
+        <p className="mt-5 text-xs leading-relaxed">
+          開発者
+          {OPERATOR_NAME ? `：${OPERATOR_NAME}` : ""}
+          {CONTACT_EMAIL ? (
+            <>
+              {OPERATOR_NAME ? " / " : "："}
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="underline decoration-[var(--line)] underline-offset-4"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </>
+          ) : null}
+        </p>
+      ) : null}
+      <p className="mt-2 text-xs tracking-wide">Warikan · URLキー共有型</p>
     </footer>
   );
 }

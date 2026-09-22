@@ -1,5 +1,5 @@
 import { ROOM_RETENTION_DAYS } from "@/lib/retention";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, OPERATOR_NAME } from "@/lib/site";
 
 /** 文面改定時はキーを上げて同意を取り直す */
 export const TERMS_STORAGE_KEY = "warikan:terms-accepted-v2";
@@ -154,7 +154,7 @@ export const LEGAL_PANELS: Record<LegalPanel, LegalDocument> = {
       {
         title: "第21条（お問い合わせ）",
         body: CONTACT_EMAIL
-          ? `1. 不具合の報告、改善要望、個人情報の取扱いに関するお問い合わせは、${CONTACT_EMAIL} までご連絡ください。個別の精算相談、金銭トラブルの仲裁、データ復元、法的助言には対応できません。`
+          ? `1. 不具合の報告、改善要望、個人情報の取扱いに関するお問い合わせは、${OPERATOR_NAME ? `${OPERATOR_NAME}（${CONTACT_EMAIL}）` : CONTACT_EMAIL} までご連絡ください。個別の精算相談、金銭トラブルの仲裁、データ復元、法的助言には対応できません。`
           : "1. 不具合の報告または改善要望がある場合、サービス公開者が示す連絡手段があるときに限り、これにご連絡ください。個別の精算相談、金銭トラブルの仲裁、データ復元、法的助言には対応できません。\n2. 個人情報の取扱いに関するお問い合わせも、前項と同様とします。",
       },
     ],
@@ -251,8 +251,10 @@ export const PRIVACY_PAGE = {
     {
       heading: "お問い合わせ",
       body: CONTACT_EMAIL
-        ? `個人情報の取扱いに関するお問い合わせは、${CONTACT_EMAIL} までご連絡ください。`
-        : "個人情報の取扱いに関するお問い合わせは、サービス公開者が示す連絡手段があるときに限り、これにご連絡ください。",
+        ? `運営者は${OPERATOR_NAME ? `${OPERATOR_NAME}です。` : ""}個人情報の取扱いに関するお問い合わせは、${CONTACT_EMAIL} までご連絡ください。`
+        : OPERATOR_NAME
+          ? `運営者のニックネームは ${OPERATOR_NAME} です。連絡用メールは、公開できる準備ができたときに本ページへ掲載します。`
+          : "個人情報の取扱いに関するお問い合わせは、サービス公開者が示す連絡手段があるときに限り、これにご連絡ください。",
     },
   ],
 };

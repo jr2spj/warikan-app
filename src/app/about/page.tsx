@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteShell } from "@/components/legal/SiteShell";
 import { ROOM_RETENTION_DAYS } from "@/lib/retention";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, OPERATOR_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Warikanについて | ログイン不要の割り勘アプリ",
@@ -52,18 +52,29 @@ export default function AboutPage() {
       </section>
 
       <section className="mt-8 space-y-3" id="contact">
-        <h2 className="text-base font-semibold text-[var(--ink)]">お問い合わせ</h2>
+        <h2 className="text-base font-semibold text-[var(--ink)]">運営者</h2>
         <p className="text-sm leading-relaxed text-[var(--ink-muted)]">
-          {CONTACT_EMAIL ? (
+          {OPERATOR_NAME || CONTACT_EMAIL ? (
             <>
-              不具合の報告や個人情報の取扱いに関するご連絡は
-              <a
-                href={`mailto:${CONTACT_EMAIL}`}
-                className="mx-1 font-medium text-[var(--brand-deep)] underline decoration-[var(--brand)]/25 underline-offset-4"
-              >
-                {CONTACT_EMAIL}
-              </a>
-              までお願いします。個別の精算相談や金銭トラブルの仲裁には対応できません。
+              {OPERATOR_NAME ? (
+                <>
+                  ニックネーム：{OPERATOR_NAME}
+                  <br />
+                </>
+              ) : null}
+              {CONTACT_EMAIL ? (
+                <>
+                  メール：
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="font-medium text-[var(--brand-deep)] underline decoration-[var(--brand)]/25 underline-offset-4"
+                  >
+                    {CONTACT_EMAIL}
+                  </a>
+                </>
+              ) : null}
+              <br />
+              不具合の報告や個人情報の取扱いに関するご連絡は上記メールまでお願いします。個別の精算相談や金銭トラブルの仲裁には対応できません。
             </>
           ) : (
             "連絡先は、公開できる準備ができたときに本ページへ掲載します。"
