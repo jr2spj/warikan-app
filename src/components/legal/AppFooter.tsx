@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { ROOM_RETENTION_DAYS } from "@/lib/retention";
 import { type LegalPanel } from "@/lib/legal";
+import { DONATE_ENABLED } from "@/lib/donate";
 import { LegalModal } from "@/components/legal/LegalModal";
+import { DonateButton } from "@/components/legal/DonateButton";
 
 export function AppFooter() {
   const [panel, setPanel] = useState<LegalPanel | null>(null);
@@ -31,6 +33,14 @@ export function AppFooter() {
             計算方法
           </button>
         </div>
+        {DONATE_ENABLED ? (
+          <div className="mt-5">
+            <DonateButton />
+            <p className="mt-2 text-center text-[11px] leading-relaxed">
+              任意です。支援の有無で機能は変わりません。
+            </p>
+          </div>
+        ) : null}
         <p className="mt-5 text-xs tracking-wide">Warikan · URLキー共有型</p>
       </footer>
 

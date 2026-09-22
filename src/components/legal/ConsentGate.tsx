@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ROOM_RETENTION_DAYS } from "@/lib/retention";
 import {
+  CONSENT_COPY,
   LEGAL_PANELS,
   TERMS_STORAGE_KEY,
   type LegalPanel,
@@ -64,40 +64,21 @@ export function ConsentGate() {
               id="consent-title"
               className="relative mt-2 font-[family-name:var(--font-display)] text-[2rem] leading-tight tracking-tight text-[var(--brand-deep)]"
             >
-              はじめる前に
+              {CONSENT_COPY.title}
             </h2>
             <p className="relative mt-3 text-sm leading-relaxed text-[var(--ink-muted)]">
-              URL共有型の割り勘ツールです。安全に使うための注意点を確認してください。
+              {CONSENT_COPY.lead}
             </p>
           </div>
 
           <div className="space-y-3 overflow-y-auto px-6 py-4">
             <ul className="space-y-3 text-sm leading-relaxed text-[var(--ink)]">
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
-                <span>
-                  ルームURLを知っている人は誰でも編集できます。共有先に注意してください。
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
-                <span>
-                  口座番号などの個人情報は入力しないでください。
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
-                <span>
-                  最終更新から{ROOM_RETENTION_DAYS}
-                  日経過したルームは自動削除されます。
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
-                <span>
-                  精算結果は参考値です。実際の送金は利用者同士で行ってください。
-                </span>
-              </li>
+              {CONSENT_COPY.bullets.map((bullet) => (
+                <li key={bullet} className="flex gap-3">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand)]" />
+                  <span>{bullet}</span>
+                </li>
+              ))}
             </ul>
 
             <div className="flex flex-wrap gap-x-4 gap-y-2 pt-2 text-sm">
@@ -124,10 +105,10 @@ export function ConsentGate() {
               onClick={accept}
               className="w-full rounded-2xl bg-[var(--brand)] px-4 py-4 text-base font-semibold text-white shadow-[var(--shadow)] transition hover:bg-[var(--brand-deep)]"
             >
-              同意してはじめる
+              {CONSENT_COPY.acceptLabel}
             </button>
             <p className="mt-3 text-center text-[11px] leading-relaxed text-[var(--ink-muted)]">
-              同意はブラウザに保存されます。この端末では次回から表示されません。
+              {CONSENT_COPY.footnote}
             </p>
           </div>
         </div>

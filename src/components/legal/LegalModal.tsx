@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { LEGAL_PANELS, type LegalPanel } from "@/lib/legal";
 
 interface LegalModalProps {
@@ -9,6 +9,19 @@ interface LegalModalProps {
 }
 
 export function LegalModal({ panel, onClose }: LegalModalProps) {
+  const [showFull, setShowFull] = useState(false);
+  const fullRef = useRef<HTMLDivElement>(null);
+  const fullId = useId();
+
+  useEffect(() => {
+    setShowFull(false);
+  }, [panel]);
+
+  useEffect(() => {
+    if (!showFull) return;
+    fullRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }, [showFull]);
+
   useEffect(() => {
     if (!panel) return;
     const prev = document.body.style.overflow;
@@ -55,19 +68,63 @@ export function LegalModal({ panel, onClose }: LegalModalProps) {
           >
             {content.title}
           </h2>
+          <p className="mt-3 text-sm leading-relaxed text-[var(--ink-muted)]">
+            {content.lead}
+          </p>
         </div>
 
         <div className="space-y-6 overflow-y-auto px-6 py-6">
-          {content.sections.map((section) => (
-            <section key={section.heading} className="space-y-2">
-              <h3 className="text-sm font-semibold text-[var(--ink)]">
-                {section.heading}
-              </h3>
-              <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-muted)]">
-                {section.body}
+          <div className="space-y-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand)]">
+              要約
+            </p>
+            {content.summary.map((section) => (
+              <section key={section.heading} className="space-y-2">
+                <h3 className="text-sm font-semibold text-[var(--ink)]">
+                  {section.heading}
+                </h3>
+                <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-muted)]">
+                  {section.body}
+                </p>
+              </section>
+            ))}
+          </div>
+
+          <div className="border-t border-[var(--line)] pt-5">
+            <button
+              type="button"
+              aria-expanded={showFull}
+              aria-controls={fullId}
+              onClick={() => setShowFull((v) => !v)}
+              className="flex w-full items-center justify-between gap-3 rounded-2xl border border-[var(--line)] bg-white/60 px-4 py-3 text-left text-sm font-semibold text-[var(--brand-deep)] transition hover:border-[var(--brand)]/40"
+            >
+              <span>{showFull ? "全文を閉じる" : "全文を読む"}</span>
+              <span aria-hidden className="text-xs text-[var(--ink-muted)]">
+                {showFull ? "▲" : "▼"}
+              </span>
+            </button>
+          </div>
+
+          {showFull ? (
+            <div ref={fullRef} id={fullId} className="space-y-7">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--brand)]">
+                全文
               </p>
-            </section>
-          ))}
+              <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-muted)]">
+                {content.fullLead}
+              </p>
+              {content.articles.map((article) => (
+                <section key={article.title} className="space-y-2">
+                  <h3 className="text-sm font-semibold text-[var(--ink)]">
+                    {article.title}
+                  </h3>
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-[var(--ink-muted)]">
+                    {article.body}
+                  </p>
+                </section>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="border-t border-[var(--line)] px-6 py-4">
