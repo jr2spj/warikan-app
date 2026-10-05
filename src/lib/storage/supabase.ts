@@ -156,5 +156,14 @@ export function createSupabaseStore(): RoomStore | null {
       if (error) throwSupabaseError(error);
       return data?.length ?? 0;
     },
+
+    async ping() {
+      const { count, error } = await client
+        .from("rooms")
+        .select("id", { count: "exact", head: true });
+
+      if (error) throwSupabaseError(error);
+      return count ?? 0;
+    },
   };
 }

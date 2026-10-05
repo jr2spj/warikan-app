@@ -5,6 +5,8 @@ export interface RoomStore {
   createRoom(room: Room): Promise<Room>;
   updateRoom(id: string, room: Room): Promise<Room>;
   deleteExpiredRooms(olderThanIso: string): Promise<number>;
+  /** 接続維持用の最小クエリ。Supabase 無料プランの休止を防ぐ。 */
+  ping(): Promise<number>;
 }
 
 declare global {
@@ -40,5 +42,8 @@ export const memoryStore: RoomStore = {
       }
     }
     return deleted;
+  },
+  async ping() {
+    return getMemoryMap().size;
   },
 };

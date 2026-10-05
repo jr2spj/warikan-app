@@ -69,6 +69,22 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 Vercel の環境変数に `CRON_SECRET`（長いランダム文字列）を追加してください。  
 既存 Supabase には `supabase/migration-retention.sql` も実行してください（delete ポリシー）。
 
+## DB 休止の防止（keep-alive）
+
+Supabase 無料プランは一定期間アクセスがないとプロジェクトが一時停止されます。復旧にはダッシュボードからの手動操作が必要なため、日次で軽量クエリを投げて防ぎます。
+
+- 実行: Vercel Cron → `GET /api/cron/keep-alive`（毎日 3:00 UTC）
+- 内容: `rooms` の件数だけを取得する `HEAD` 相当のクエリ（行は読まない）
+- 保護: `Authorization: Bearer $CRON_SECRET`
+
+90日削除の cron（15:00 UTC）と合わせて約12時間おきにアクセスが発生します。動作確認:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/keep-alive
+```
+
+Supabase 未設定（メモリモード）の場合は 503 を返すので、本番で設定漏れに気付けます。
+
 ## ディレクトリ構成
 
 ```
